@@ -6,45 +6,55 @@
 void print_help() {
 	printf(
 		"Creates .h and .c files containing a const char* variable\n"
-		"with the contents of 'input_file'."
+		"with the contents of 'input_file'.\n\n"
 	);
-	printf("Usage:\n\tstringify [input_file] [--help | -h]");
+	printf("Usage:\n\tstringify [input_file] [--help | -h]\n");
 }
 
 bool _is_stringify_exit_called = false;
 void check_help_option(int argc, char *argv[]) {
 	for (int i = 1; i < argc; i++) {
 		if (strstr(argv[i], "--help") || strstr(argv[i], "-h")) {
-#ifndef NDEBUG
-			print_help();
-#endif
 #ifndef TESTING
+			print_help();
 			exit(0);
-#endif
+#else
 			_is_stringify_exit_called = true;
+			return;
+#endif
 		}
 		if (strstr(argv[i], "--") || strstr(argv[i], "-")) {
-#ifndef NDEBUG
-			fprintf(stderr, "Invalid option: %s\n", argv[i]);
-			print_help();
-#endif
 #ifndef TESTING
+			printf("Invalid option: %s\n", argv[i]);
+			print_help();
 			exit(1);
-#endif
+#else
 			_is_stringify_exit_called = true;
+			return;
+#endif
 		}
 	}
 }
 
 void check_argc(int argc) {
 	if (argc > 2) {
+#ifndef TESTING
 		printf("Please provide only one input file.\n");
 		print_help();
 		exit(1);
+#else
+		_is_stringify_exit_called = true;
+		return;
+#endif
 	} else if (argc < 2) {
+#ifndef TESTING
 		printf("Please provide an input file.\n");
 		print_help();
 		exit(1);
+#else
+		_is_stringify_exit_called = true;
+		return;
+#endif
 	}
 }
 

@@ -9,7 +9,6 @@
       "-Wconversion",
       "-Wunused-result",
       "-Isrc",
-      "-DNDEBUG",
       "-DTESTING",
       "build/obj/stringify.o",
       "-o",
@@ -57,8 +56,6 @@
       "-I",
       "src",
       "-D",
-      "NDEBUG",
-      "-D",
       "TESTING",
       "-internal-isystem",
       "/usr/lib/clang/17/include",
@@ -85,11 +82,11 @@
       "-x",
       "c",
       "-o",
-      "/tmp/unit-test-02245b.o",
+      "/tmp/unit-test-da056e.o",
       "tests/unit-test.c"
     ],
     "directory": "/home/bandigame/stringify",
     "file": "/home/bandigame/stringify/tests/unit-test.c",
-    "output": "/tmp/unit-test-02245b.o"
+    "output": "/tmp/unit-test-da056e.o"
   }
 ]
