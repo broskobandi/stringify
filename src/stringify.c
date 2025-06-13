@@ -69,9 +69,14 @@ str_t *get_file_content(const str_t *file_name) {
 	if (!file_name) return NULL;
 	FILE *file = fopen(str_data(file_name), "r");
 	if (!file) {
+#ifndef TESTING
 		printf("Invalid input file: %s\n", str_data(file_name));
 		print_help();
 		exit(1);
+#else
+		_is_stringify_exit_called = true;
+		return NULL;
+#endif
 	}
 
 	str_t *file_content = str_create();
@@ -89,10 +94,11 @@ str_t *get_file_content(const str_t *file_name) {
 int format_file_content(str_t *file_content) {
 	if (!file_content) return 1;
 
-	if (str_push_front(file_content, '\"')) return 1;
-	if (!str_replace(file_content, "\n", "\"\n\"")) return 1;
-	if (!str_replace(file_content, "\t", "\\t")) return 1;
 	if (!str_replace(file_content, "\"", "\\\"")) return 1;
+	if (!str_replace(file_content, "\n", "\\n\"\n\"")) return 1;
+	if (!str_replace(file_content, "\t", "\\t")) return 1;
+
+	if (str_push_front(file_content, '\"')) return 1;
 	if (str_push_back(file_content, '\"')) return 1;
 
 	return 0;

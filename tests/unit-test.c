@@ -109,10 +109,50 @@ int test_get_file_name() {
 	return 0;
 }
 
+int test_get_file_content() {
+	FILE *file = fopen("dummy_file.txt", "w");
+	if (!file) return 1;
+	{
+		str_auto file_name = str_create();
+		if (!file_name) return 2;
+		if (!str_append(file_name, "dummy_file.txt")) return 3;
+		str_auto file_content = get_file_content(file_name);
+		if (!file_content) return 4;
+	}
+	{
+		str_auto file_name = NULL;
+		str_auto file_content = get_file_content(file_name);
+		if (file_content) return 5;
+	}
+	if (remove("dummy_file.txt") != 0) return 6;
+	return 0;
+}
+
+int test_format_file_content() {
+	str_auto file_name = str_create();
+	if (!file_name) return 1;
+	if (!str_append(file_name, "dummy_file.txt")) return 2;
+	FILE *file = fopen(str_data(file_name), "w");
+	if (!file) return 3;
+	const char *original_content = "this\tis\nsome \"cool\"\n\t\ttext...\n";
+	if (fputs(original_content, file) == -1) return 4;
+	fclose(file);
+	const char *expected_content = "\"this\\tis\\n\"\n\"some \\\"cool\\\"\\n\"\n\"\\t\\ttext...\\n\"\n\"\"";
+	str_auto file_content = get_file_content(file_name);
+	if (!file_content) return 5;
+	if (format_file_content(file_content)) return 6;
+	if (!str_cmp(file_content, expected_content)) return 7;
+	if (remove("dummy_file.txt") != 0) return 8;
+	return 0;
+}
+
 int main(void) {
 	ASSERT(test_check_help_option() == 0);
 	ASSERT(test_check_argc() == 0);
 	ASSERT(test_get_file_name() == 0);
+	ASSERT(test_get_file_content() == 0);
+	// printf("%d\n", test_format_file_content());
+	ASSERT(test_format_file_content() == 0);
 
 	print_results();
 	return 0;
