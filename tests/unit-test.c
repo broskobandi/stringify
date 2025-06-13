@@ -146,6 +146,19 @@ int test_format_file_content() {
 	return 0;
 }
 
+int test_format_file_name() {
+	str_auto file_name = str_create();
+	if (!file_name) return 1;
+	if (!str_append(file_name, "dummy-file.txt")) return 2;
+	if (format_file_name(file_name)) return 4;
+	if (str_cmp(file_name, "dummy_file_txt") != true) return 5;
+	return 0;
+}
+
+int test_create_header_file_content() {
+	return 0;
+}
+
 int main(void) {
 	ASSERT(test_check_help_option() == 0);
 	ASSERT(test_check_argc() == 0);
@@ -153,6 +166,7 @@ int main(void) {
 	ASSERT(test_get_file_content() == 0);
 	// printf("%d\n", test_format_file_content());
 	ASSERT(test_format_file_content() == 0);
+	ASSERT(test_format_file_name() == 0);
 
 	print_results();
 	return 0;

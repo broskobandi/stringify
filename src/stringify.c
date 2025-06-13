@@ -113,7 +113,7 @@ int format_file_name(str_t *file_name) {
 	return 0;
 }
 
-str_t *create_header_file_content_content(const str_t *file_name) {
+str_t *create_header_file_content(const str_t *file_name) {
 	if (!file_name) return NULL;
 
 	str_t *header_file_content = str_create();
