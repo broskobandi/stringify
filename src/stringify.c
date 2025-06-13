@@ -113,21 +113,22 @@ int format_file_name(str_t *file_name) {
 	return 0;
 }
 
-str_t *create_header_file_content(const str_t *file_name) {
-	if (!file_name) return NULL;
+str_t *create_header_file_content(const str_t *formatted_file_name) {
+	if (!formatted_file_name) return NULL;
 
 	str_t *header_file_content = str_create();
 	if (!header_file_content) return NULL;
 
 	if (!str_append(header_file_content, "#ifndef ")) return NULL;
-	if (!str_append(header_file_content, str_data(file_name))) return NULL;
+	if (!str_append(header_file_content, str_data(formatted_file_name))) return NULL;
 	if (!str_append(header_file_content, "_H\n")) return NULL;
 	if (!str_append(header_file_content, "#define ")) return NULL;
-	if (!str_append(header_file_content, str_data(file_name))) return NULL;
+	if (!str_append(header_file_content, str_data(formatted_file_name))) return NULL;
 	if (!str_append(header_file_content, "_H\n\n")) return NULL;
 
-	if (!str_append(header_file_content, "extern const char* ")) return NULL;
-	if (!str_append(header_file_content, str_data(file_name))) return NULL;
+	if (!str_append(header_file_content, "extern const char *")) return NULL;
+	if (!str_append(header_file_content, str_data(formatted_file_name))) return NULL;
+	if (!str_append(header_file_content, "_str")) return NULL;
 	if (!str_append(header_file_content, ";\n\n")) return NULL;
 
 	if (!str_append(header_file_content, "#endif\n")) return NULL;

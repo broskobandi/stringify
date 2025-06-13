@@ -156,6 +156,33 @@ int test_format_file_name() {
 }
 
 int test_create_header_file_content() {
+	str_auto file_name = str_create();
+	if (!file_name) return 1;
+	if (!str_append(file_name, "dummy-file.txt")) return 2;
+
+	FILE *file = fopen(str_data(file_name), "w");
+	if (!file) return 3;
+	const char *original_content = "this\tis\nsome \"cool\"\n\t\ttext...\n";
+	if (fputs(original_content, file) == -1) return 4;
+	if (fclose(file) != 0) return 5;
+
+	str_auto file_content = get_file_content(file_name);
+	if (!file_content) return 6;
+	if (format_file_content(file_content)) return 7;
+	if (format_file_name(file_name)) return 8;
+
+	str_auto header_file_content = create_header_file_content(file_name);
+
+	const char *expected_header_file_content = 
+		"#ifndef dummy_file_txt_H\n"
+		"#define dummy_file_txt_H\n\n"
+		"extern const char *dummy_file_txt_str;\n\n"
+		"#endif\n";
+
+	if (str_cmp(header_file_content, expected_header_file_content) != true) return 9;
+
+	if (remove("dummy-file.txt") != 0) return 10; // this seems to fail. why?
+
 	return 0;
 }
 
@@ -164,9 +191,9 @@ int main(void) {
 	ASSERT(test_check_argc() == 0);
 	ASSERT(test_get_file_name() == 0);
 	ASSERT(test_get_file_content() == 0);
-	// printf("%d\n", test_format_file_content());
 	ASSERT(test_format_file_content() == 0);
 	ASSERT(test_format_file_name() == 0);
+	ASSERT(test_create_header_file_content() == 0);
 
 	print_results();
 	return 0;
